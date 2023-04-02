@@ -1,4 +1,3 @@
-
 var suenoTotal = 0;
 var calidadTotal = 0;
 var diasDelMes = 31;
@@ -42,22 +41,8 @@ if (promedioSuenio < 7) {
 } else {
     document.write("<p>Su tiempo de sueño es promedio.</p>");
 }    
+var resumenCalidadSuenio = calcularResumenCalidadSuenio(opcionesCalidad, diasDelMes);
 document.write("<p>Aqui tiene un resúmen de su sueño por mes:</p>");
-for (var l = 0; l < opcionesCalidad.length; l++)
-    var count = 0;
-    for (var m = 1; m <= diasDelMes; m++) {
-    var promptCalidad = "Ingrese calidad se sueño por día:" + m + " (";
-    for (var n = 0; n < opcionesCalidad.length; n++) {
-        promptCalidad += opcionesCalidad[n].code + "=" + opcionesCalidad[n].nombre;
-        if (n < opcionesCalidad.length - 1) {
-           promptCalidad += ", ";
-        }
-    }
-    promptCalidad += "):";
-    var codigoCalidadSuenio = prompt(promptCalidad);
-        
-    if (codigoCalidadSuenio.toUpperCase() === opcionesCalidad[l].code) {
-        count++;
-    }
-    document.write("<p>" + opcionesCalidad[l].nombre + ": " + count + " days</p>");
-    }
+for (var l = 0; l < resumenCalidadSuenio.length; l++) {
+  document.write("<p>" + resumenCalidadSuenio[l].nombre + ": " + resumenCalidadSuenio[l].count + " days</p>");
+}
