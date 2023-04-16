@@ -34,9 +34,12 @@ function calcularResumenCalidadSuenio(opcionesCalidad, diasDelMes) {
   }
   for (var j = 1; j <= diasDelMes; j++) {
     var codigoCalidadSuenio = promptCalidad(opcionesCalidad, j);
+    var horasSuenio = parseFloat(getHorasSuenio(j));
+    suenoTotal += horasSuenio; // update total hours slept
     for (var k = 0; k < opcionesCalidad.length; k++) {
       if (codigoCalidadSuenio.toUpperCase() === opcionesCalidad[k].code) {
         resumenCalidadSuenio[k].count++;
+        calidadTotal += k + 1; // update total quality of sleep
         break;
       }
     }
@@ -73,3 +76,22 @@ if (promedioSuenio < 7) {
 } else {
     document.write("<p>Su tiempo de sueño es promedio.</p>");
 }
+var peorCalidadSuenio = resumenCalidadSuenio.slice().sort(function(a, b) {
+  return b.count - a.count;
+  }).slice(-5);
+  document.write("<p>Basado en los cinco peores días de sueño, aquí hay algunas recomendaciones para mejorar su sueño:</p>");
+  if (peorCalidadSuenio.some(function(item) { return item.nombre === "Pésimo" })) {
+  document.write("<p>Trate de establecer una rutina de sueño regular y acostarse y levantarse a la misma hora todos los días.</p>");
+  }
+  if (peorCalidadSuenio.some(function(item) { return item.nombre === "Malo" })) {
+  document.write("<p>Evite tomar cafeína y alcohol antes de acostarse, ya que pueden afectar la calidad del sueño.</p>");
+  }
+  if (peorCalidadSuenio.some(function(item) { return item.nombre === "Ligero" })) {
+  document.write("<p>Intente reducir la cantidad de luz en su habitación antes de acostarse, ya que la luz brillante puede interferir con la producción de melatonina en el cuerpo, lo que puede hacer que sea más difícil conciliar el sueño.</p>");
+  }
+  if (peorCalidadSuenio.some(function(item) { return item.nombre === "Aceptable" })) {
+  document.write("<p>Considere la posibilidad de hacer ejercicio durante el día, lo que puede ayudarlo a dormir mejor por la noche. Sin embargo, evite hacer ejercicio antes de acostarse, ya que puede tener el efecto contrario.</p>");
+  }
+  if (peorCalidadSuenio.some(function(item) { return item.nombre === "Ok" })) {
+  document.write("<p>Trate de reducir el ruido en su habitación antes de acostarse, ya que el ruido puede interrumpir su sueño.</p>");
+  }
