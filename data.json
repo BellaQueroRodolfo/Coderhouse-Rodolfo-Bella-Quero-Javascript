@@ -1,0 +1,15 @@
+{
+    "suenoTotal": 0,
+    "calidadTotal": 0,
+    "diasDelMes": 31,
+    "opcionesCalidad": [
+      { "code": "1", "nombre": "Pésimo" },
+      { "code": "2", "nombre": "Malo" },
+      { "code": "3", "nombre": "Ligero" },
+      { "code": "4", "nombre": "Aceptable" },
+      { "code": "5", "nombre": "Ok" },
+      { "code": "6", "nombre": "Apropiado" },
+      { "code": "7", "nombre": "Bueno" },
+      { "code": "8", "nombre": "Excelente" }
+    ]
+  }
