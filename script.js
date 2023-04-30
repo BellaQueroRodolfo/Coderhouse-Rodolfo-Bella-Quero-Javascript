@@ -1,97 +1,120 @@
-var suenoTotal = 0;
-var calidadTotal = 0;
-var diasDelMes = 31;
-var opcionesCalidad = [
-  { code: "1", nombre: "Pésimo" },
-  { code: "2", nombre: "Malo" },
-  { code: "3", nombre: "Ligero" },
-  { code: "4", nombre: "Aceptable" },
-  { code: "5", nombre: "Ok" },
-  { code: "6", nombre: "Apropiado" },
-  { code: "7", nombre: "Bueno" },
-  { code: "8", nombre: "Excelente" }
-];
-
-function getHorasSuenio(i) {
-  return prompt("Indique horas de sueño del día " + i + ":");
+function promptCalidad(opcionesCalidad, dia) {
+  var mensaje = `Ingrese el código correspondiente a la calidad de sueño del día ${dia}:`;
+  opcionesCalidad.forEach(function(opcion) {
+    mensaje += ` ${opcion.nombre} (${opcion.code})`;
+  });
+  return prompt(mensaje);
 }
 
-function getCalidadSuenio(i) {
-  var promptCalidad = "Indique calidad de horas de sueño para el día " + i + " (";
-  for (var j = 0; j < opcionesCalidad.length; j++) {
-    promptCalidad += opcionesCalidad[j].code + "=" + opcionesCalidad[j].nombre;
-    if (j < opcionesCalidad.length - 1) {
-      promptCalidad += ", ";
-    }
-  }
-  promptCalidad += "):";
-  return prompt(promptCalidad);
+function getHorasSuenio(dia) {
+  return prompt(`Ingrese la cantidad de horas de sueño del día ${dia}:`);
 }
+
 function calcularResumenCalidadSuenio(opcionesCalidad, diasDelMes) {
   var resumenCalidadSuenio = [];
-  for (var i = 0; i < opcionesCalidad.length; i++) {
-    resumenCalidadSuenio.push({ nombre: opcionesCalidad[i].nombre, count: 0 });
-  }
+  var suenoTotal = 0;
+  var calidadTotal = 0;
+
+  opcionesCalidad.forEach(function(opcion) {
+    resumenCalidadSuenio.push({ nombre: opcion.nombre, count: 0 });
+  });
+
   for (var j = 1; j <= diasDelMes; j++) {
     var codigoCalidadSuenio = promptCalidad(opcionesCalidad, j);
     var horasSuenio = parseFloat(getHorasSuenio(j));
-    suenoTotal += horasSuenio; // update total hours slept
-    for (var k = 0; k < opcionesCalidad.length; k++) {
-      if (codigoCalidadSuenio.toUpperCase() === opcionesCalidad[k].code) {
+    suenoTotal += horasSuenio;
+
+    opcionesCalidad.forEach(function(opcion, k) {
+      if (codigoCalidadSuenio.toUpperCase() === opcion.code) {
         resumenCalidadSuenio[k].count++;
-        calidadTotal += k + 1; // update total quality of sleep
-        break;
+        calidadTotal += k + 1;
       }
-    }
+    });
   }
-  return resumenCalidadSuenio;
-}
 
-function promptCalidad(opcionesCalidad, dia) {
-  var promptCalidad = "Indique calidad de horas de sueño para el día " + dia + " (";
-  for (var i = 0; i < opcionesCalidad.length; i++) {
-    promptCalidad += opcionesCalidad[i].code + "=" + opcionesCalidad[i].nombre;
-    if (i < opcionesCalidad.length - 1) {
-      promptCalidad += ", ";
-    }
-  }
-  promptCalidad += "):";
-  return prompt(promptCalidad);
-}
-
-var resumenCalidadSuenio = calcularResumenCalidadSuenio(opcionesCalidad, diasDelMes);
-document.write("<p>Aqui tiene un resúmen de su sueño por mes:</p>");
-for (var l = 0; l < resumenCalidadSuenio.length; l++) {
-  document.write("<p>" + resumenCalidadSuenio[l].nombre + ": " + resumenCalidadSuenio[l].count + " days</p>");
-}
-
-var promedioSuenio = suenoTotal / diasDelMes;
-var promedioCalidad = opcionesCalidad[Math.round(calidadTotal / diasDelMes)].nombre;    
-document.write("<p>Su promedio de horas de seuño para el mes es: " + promedioSuenio.toFixed(2) + "</p>");
-document.write("<p>Su promedio en calidad de sueño para el mes es: " + promedioCalidad + "</p>");    
-if (promedioSuenio < 7) {
-    document.write("<p>Puede que no esté durmiendo lo suficiente. Cambie sus rutinas para el sueño o consulte a un profesional.</p>");
-} else if (promedioSuenio >= 8) {
-    document.write("<p>Está obteniendo una buena cantidad de sueño. Continúe con sus patrones de conducta para el mismo.</p>");
-} else {
-    document.write("<p>Su tiempo de sueño es promedio.</p>");
-}
-var peorCalidadSuenio = resumenCalidadSuenio.slice().sort(function(a, b) {
-  return b.count - a.count;
+  var promedioSuenio = suenoTotal / diasDelMes;
+  var promedioCalidad = opcionesCalidad[Math.round(calidadTotal / diasDelMes)].nombre;
+  var peorCalidadSuenio = resumenCalidadSuenio.slice().sort(function(a, b) {
+    return b.count - a.count;
   }).slice(-5);
-  document.write("<p>Basado en los cinco peores días de sueño, aquí hay algunas recomendaciones para mejorar su sueño:</p>");
+  var recomendaciones = [];
+
   if (peorCalidadSuenio.some(function(item) { return item.nombre === "Pésimo" })) {
-  document.write("<p>Trate de establecer una rutina de sueño regular y acostarse y levantarse a la misma hora todos los días.</p>");
+    recomendaciones.push("Trate de establecer una rutina de sueño regular y acostarse y levantarse a la misma hora todos los días.");
   }
   if (peorCalidadSuenio.some(function(item) { return item.nombre === "Malo" })) {
-  document.write("<p>Evite tomar cafeína y alcohol antes de acostarse, ya que pueden afectar la calidad del sueño.</p>");
+    recomendaciones.push("Evite tomar cafeína y alcohol antes de acostarse, ya que pueden afectar la calidad del sueño.");
   }
   if (peorCalidadSuenio.some(function(item) { return item.nombre === "Ligero" })) {
-  document.write("<p>Intente reducir la cantidad de luz en su habitación antes de acostarse, ya que la luz brillante puede interferir con la producción de melatonina en el cuerpo, lo que puede hacer que sea más difícil conciliar el sueño.</p>");
+    recomendaciones.push("Intente hacer ejercicio regularmente para ayudar a mejorar la calidad del sueño.");
   }
-  if (peorCalidadSuenio.some(function(item) { return item.nombre === "Aceptable" })) {
-  document.write("<p>Considere la posibilidad de hacer ejercicio durante el día, lo que puede ayudarlo a dormir mejor por la noche. Sin embargo, evite hacer ejercicio antes de acostarse, ya que puede tener el efecto contrario.</p>");
+
+  var resumen = {
+    resumenCalidadSuenio: resumenCalidadSuenio,
+    promedioSuenio: promedioSuenio.toFixed(2),
+    promedioCalidad: promedioCalidad,
+    recomendaciones: recomendaciones
+  };
+  
+  localStorage.setItem("resúmenSueño", JSON.stringify(resumen));
+  
+  return resumen;
+}
+
+var opcionesCalidad = [
+  { nombre: "Excelente", code: "E" },
+  { nombre: "Bueno", code: "B" },
+  { nombre: "Regular", code: "R" },
+  { nombre: "Ligero", code: "L" },
+  { nombre: "Malo", code: "M" },
+  { nombre: "Pésimo", code: "P" }
+  ];
+  
+  function saveData(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
   }
-  if (peorCalidadSuenio.some(function(item) { return item.nombre === "Ok" })) {
-  document.write("<p>Trate de reducir el ruido en su habitación antes de acostarse, ya que el ruido puede interrumpir su sueño.</p>");
+  
+  function getData(key) {
+  var value = localStorage.getItem(key);
+  return value && JSON.parse(value);
   }
+  
+  var diasDelMes = parseInt(prompt("Ingrese la cantidad de días del mes a evaluar:"));
+  var resumen = calcularResumenCalidadSuenio(opcionesCalidad, diasDelMes);
+  
+  saveData("resumenCalidadSuenio", resumen);
+  
+  document.write("<h2>Resumen de calidad de sueño del mes:</h2>");
+  document.write("<p>Cantidad de días evaluados: " + diasDelMes + "</p>");
+  document.write("<p>Promedio de horas de sueño: " + resumen.promedioSuenio + "</p>");
+  document.write("<p>Promedio de calidad de sueño: " + resumen.promedioCalidad + "</p>");
+  document.write("<ul>");
+  for (var i = 0; i < resumen.resumenCalidadSuenio.length; i++) {
+  document.write("<li>" + resumen.resumenCalidadSuenio[i].nombre + ": " + resumen.resumenCalidadSuenio[i].count + "</li>");
+  }
+  document.write("</ul>");
+  document.write("<h3>Recomendaciones para mejorar la calidad del sueño:</h3>");
+  document.write("<ul>");
+  for (var j = 0; j < resumen.recomendaciones.length; j++) {
+  document.write("<li>" + resumen.recomendaciones[j] + "</li>");
+  }
+  document.write("</ul>");
+  
+var storedResumen = getData("resumenCalidadSuenio");
+if (storedResumen) {
+console.log("Objeto Resúmen Sueño Recuperado Desde Almacenamiento:", storedResumen);
+} else {
+console.log("Objeto Resúmen Sueño No Encontrado En Almacenamiento.");
+}
+var resumenObjeto = localStorage.getItem("resúmenCalidadSueño");
+
+if (resumenObjeto) {
+console.log("Objeto Resúmen Sueño Encontrado En Almacenamiento:");
+console.log(resumenObjeto);
+} else {
+console.log("Objeto Resúmen Sueño No Encontrado En Almacenamiento.");
+}
+
+localStorage.setItem("resúmenCalidadSueño", JSON.stringify(resumen));
+
+document.write("</ul>");
